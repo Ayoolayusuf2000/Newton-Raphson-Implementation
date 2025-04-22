@@ -1,0 +1,58 @@
+def newton_raphson(f, df, x0, max_iter=500, tol=0.000001):
+    """
+    Newton-Raphson method for finding roots of a function
+    
+    Parameters:
+    f - the function whose root we want to find
+    df - the derivative of the function
+    x0 - initial approximation
+    max_iter - maximum number of iterations (default 500)
+    tol - tolerance for convergence (default 0.000001)
+    
+    Returns:
+    The approximate root if converged, otherwise None
+    """
+    print("Iter.\txk\t\tf(xk)\t\tError")
+    
+    xk = x0
+    for k in range(1, max_iter + 1):
+        fxk = f(xk)
+        dfxk = df(xk)
+        
+        if dfxk == 0:
+            print("Derivative is zero. Cannot continue.")
+            return None
+            
+        xk_new = xk - fxk / dfxk
+        err = abs(xk_new - xk) / abs(xk_new) if xk_new != 0 else abs(xk_new - xk)
+        
+        # Print current iteration
+        print(f"{k}\t{xk_new:.16f}\t{fxk:.16f}\t{err:.12f}")
+        
+        # Check for convergence
+        if err < tol:
+            print("\nRequired accuracy achieved; Solution is convergent.")
+            return xk_new
+            
+        xk = xk_new
+    
+    print("\nThe number of iterations exceeded the maximum limit.")
+    return None
+
+# Define the function and its derivative from the original script
+def f(x):
+    return 4 * x + math.sin(x) - math.exp(x)
+
+def df(x):
+    return 4 + math.cos(x) - math.exp(x)
+
+# Example usage
+import math
+
+print("Solving 4x + sin(x) - exp(x) = 0")
+initial_guess = float(input("Enter the initial approximation: "))
+root = newton_raphson(f, df, initial_guess)
+
+if root is not None:
+    print(f"\nApproximate root: {root:.8f}")
+    print(f"Function value at root: {f(root):.8f}")
